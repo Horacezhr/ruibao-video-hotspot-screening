@@ -56,23 +56,30 @@ async function fetchFeed(feed) {
     headers: { 'user-agent': 'ruibao-hotspot-screening/1.0' },
   });
   if (!response.ok) throw new Error(feed.name + ': HTTP ' + response.status);
+
   const xml = await response.text();
   const itemPattern = new RegExp('<item[\\s\\S]*?<\\/item>', 'gi');
-  return [...xml.matchAll(itemPattern)].map(([item]) => {
-    const title = getTag(item, 'title');
-    const sourceUrl = getTag(item, 'link');
-    const pubDate = getTag(item, 'pubDate');
-    return {
-      tag: feed.tag,
-      title,
-      time: pubDate ? new Date(pubDate).toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' }) : '刚刚',
-      sourceName: feed.name,
-      sourceUrl,
-      angle: makeAngle(title, feed.tag),
-      score: scoreTitle(title, feed.tag),
-      risk: makeRisk(feed.tag),
-    };
-  }).filter((item) => item.title);
+
+  return [...xml.matchAll(itemPattern)]
+    .map(([item]) => {
+      const title = getTag(item, 'title');
+      const sourceUrl = getTag(item, 'link');
+      const pubDate = getTag(item, 'pubDate');
+      const summary = getTag(item, 'description');
+
+      return {
+        tag: feed.tag,
+        title,
+        time: pubDate ? new Date(pubDate).toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' }) : '刚刚',
+        sourceName: feed.name,
+        sourceUrl,
+        summary,
+        angle: makeAngle(title, feed.tag),
+        score: scoreTitle(title, feed.tag),
+        risk: makeRisk(feed.tag),
+      };
+    })
+    .filter((item) => item.title);
 }
 
 const collected = [];
@@ -80,7 +87,7 @@ const failures = [];
 
 for (const feed of config.feeds || []) {
   try {
-    collected.push(...await fetchFeed(feed));
+    collected.push(...(await fetchFeed(feed)));
   } catch (error) {
     failures.push(error.message);
   }
@@ -95,7 +102,7 @@ const hotspots = collected
     return true;
   })
   .sort((a, b) => b.score - a.score)
-  .slice(0, 5);
+  .slice(0, 12);
 
 const output = {
   ...fallback,
