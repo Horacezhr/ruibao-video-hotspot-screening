@@ -1,0 +1,160 @@
+import { useEffect, useMemo, useState } from 'react';
+import { ArrowRight, BarChart3, CheckCircle2, HeartPulse, Search, ShieldCheck, Sparkles, Target, TrendingUp, Video } from 'lucide-react';
+
+type Hotspot = {
+  tag: string;
+  title: string;
+  time: string;
+  score?: number;
+};
+
+type HotspotData = {
+  updatedAt: string;
+  title: string;
+  subtitle: string;
+  description: string;
+  categories: string[];
+  hotspots: Hotspot[];
+  workflow: string[];
+  disclaimer: string;
+};
+
+const fallbackData: HotspotData = {
+  updatedAt: new Date().toISOString(),
+  title: '睿宝视频号热点筛选',
+  subtitle: '儿童健康内容热点筛选看板',
+  description: '从儿科、益生菌、儿童保健和儿童健康相关热点中筛出适合视频号表达的选题，兼顾热度、可信度、家长关心程度和内容风险。',
+  categories: ['儿科热点', '益生菌话题', '儿童保健', '儿童健康', '选题追踪', '内容审核'],
+  hotspots: [
+    { tag: '儿科', title: '儿童呼吸道感染进入高关注期，适合做家庭护理和就诊判断选题', time: '2 小时前', score: 92 },
+    { tag: '益生菌', title: '儿童益生菌使用场景升温，适合拆成科普边界与常见误区', time: '4 小时前', score: 86 },
+    { tag: '保健', title: '睡眠、运动、营养管理搜索热度上升，可做系列短视频', time: '6 小时前', score: 82 },
+    { tag: '疫苗', title: '校园健康通知与感染预防相关内容适合做政策提醒类选题', time: '8 小时前', score: 80 },
+    { tag: '发育', title: '身高体重、视力和口腔管理长期稳定，可沉淀为常青内容', time: '今日早些时候', score: 78 },
+  ],
+  workflow: ['热点发现与关键词监测', '可信来源与医学依据核验', '视频号选题评分与排序', '脚本草稿与发布复盘'],
+  disclaimer: '健康内容仅用于选题筛选和科普策划，不替代医生诊断或治疗建议。发布前应核验权威来源。',
+};
+
+const categoryDescriptions = [
+  '归类儿科相关热搜，判断视频号选题价值。',
+  '整理研究动态、产品监管、适用场景和风险提醒。',
+  '覆盖发育、睡眠、营养、运动、口腔和视力等日常主题。',
+  '承接综合热点、疾病预防、季节提醒和家庭护理内容。',
+  '记录热点来源、热度变化、推荐角度和发布状态。',
+  '标注医学依据、风险等级和不适合传播的表达。',
+];
+
+function formatUpdatedAt(value: string) {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return '待更新';
+  return date.toLocaleString('zh-CN', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' });
+}
+
+function App() {
+  const [data, setData] = useState<HotspotData>(fallbackData);
+  const [isLiveData, setIsLiveData] = useState(false);
+
+  useEffect(() => {
+    let active = true;
+    fetch('./hotspots.json', { cache: 'no-store' })
+      .then((response) => {
+        if (!response.ok) throw new Error('hotspot data unavailable');
+        return response.json() as Promise<HotspotData>;
+      })
+      .then((nextData) => {
+        if (!active) return;
+        setData(nextData);
+        setIsLiveData(true);
+      })
+      .catch(() => {
+        if (active) setIsLiveData(false);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  const updatedAt = useMemo(() => formatUpdatedAt(data.updatedAt), [data.updatedAt]);
+  const categories = data.categories.length ? data.categories : fallbackData.categories;
+  const hotspots = data.hotspots.slice(0, 5);
+
+  return (
+    <main className="min-h-screen bg-[#fbfbf7] text-[#18221d]">
+      <header className="sticky top-0 z-10 border-b border-[#e6ebe4] bg-[#fbfbf7]/92 backdrop-blur-xl">
+        <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-5 py-4 sm:px-8">
+          <a className="flex items-center gap-2 font-semibold" href="./">
+            <span className="grid size-8 place-items-center rounded-md bg-[#176f5d] text-white"><Video size={17} aria-hidden="true" /></span>
+            {data.title}
+          </a>
+          <nav className="hidden items-center gap-7 text-sm text-[#66736b] md:flex">
+            {categories.slice(0, 4).map((category) => <a className="transition hover:text-[#18221d]" href="#topics" key={category}>{category}</a>)}
+          </nav>
+          <a className="inline-flex size-9 items-center justify-center rounded-md border border-[#d7dfd8] bg-white text-[#18221d] transition hover:border-[#9fb1a6]" href="#search" aria-label="搜索内容"><Search size={17} aria-hidden="true" /></a>
+        </div>
+      </header>
+
+      <section className="mx-auto grid w-full max-w-7xl gap-10 px-5 py-12 sm:px-8 md:grid-cols-[1.25fr_0.75fr] md:items-start md:py-20">
+        <div className="max-w-3xl">
+          <p className="mb-5 inline-flex items-center gap-2 text-sm font-medium text-[#176f5d]"><TrendingUp size={16} aria-hidden="true" />{data.subtitle}</p>
+          <h1 className="text-4xl font-semibold leading-tight tracking-normal sm:text-5xl md:text-6xl">{data.title}</h1>
+          <p className="mt-6 max-w-2xl text-base leading-8 text-[#5f6c64] sm:text-lg">{data.description}</p>
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+            <a className="inline-flex items-center justify-center gap-2 rounded-md bg-[#18221d] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#2b3831]" href="#recent">查看候选热点<ArrowRight size={16} aria-hidden="true" /></a>
+            <a className="inline-flex items-center justify-center rounded-md border border-[#d7dfd8] bg-white px-5 py-3 text-sm font-semibold transition hover:border-[#9fb1a6]" href="#sources">筛选流程</a>
+          </div>
+        </div>
+
+        <aside className="rounded-lg border border-[#e1e8e2] bg-white/80 p-5" id="recent">
+          <div className="mb-4 flex items-start justify-between gap-4">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#8a978e]">Candidates</p>
+              <h2 className="mt-1 text-lg font-semibold">候选热点</h2>
+              <p className="mt-1 text-xs text-[#8a978e]">{isLiveData ? '已同步' : '本地预览'} · {updatedAt}</p>
+            </div>
+            <span className="rounded-md bg-[#eef6f1] px-2.5 py-1 text-xs font-semibold text-[#176f5d]">{hotspots.length} 条</span>
+          </div>
+          <div className="divide-y divide-[#edf1ec]">
+            {hotspots.map((item, index) => (
+              <article className="py-3.5 first:pt-0 last:pb-0" key={item.title}>
+                <div className="mb-1.5 flex items-center justify-between gap-3 text-xs text-[#8a978e]"><span className="font-semibold text-[#176f5d]">0{index + 1} · {item.tag}</span><span>{item.time}</span></div>
+                <h3 className="text-sm font-semibold leading-6 text-[#243028]">{item.title}</h3>
+                {item.score ? <p className="mt-1.5 text-xs text-[#8a978e]">选题分：{item.score}</p> : null}
+              </article>
+            ))}
+          </div>
+        </aside>
+      </section>
+
+      <section className="border-y border-[#e6ebe4] bg-white py-12" id="topics">
+        <div className="mx-auto w-full max-w-7xl px-5 sm:px-8">
+          <div className="mb-7 flex items-end justify-between gap-4"><div><p className="text-sm font-semibold text-[#176f5d]">Screening</p><h2 className="mt-2 text-2xl font-semibold">筛选维度</h2></div><BarChart3 className="hidden text-[#176f5d] sm:block" size={26} aria-hidden="true" /></div>
+          <div className="grid gap-px overflow-hidden rounded-lg border border-[#e6ebe4] bg-[#e6ebe4] sm:grid-cols-2 lg:grid-cols-3">
+            {categories.map((category, index) => <a className="bg-white p-5 transition hover:bg-[#f7faf6]" href="#recent" key={category}><Target className="mb-4 text-[#176f5d]" size={21} aria-hidden="true" /><h3 className="font-semibold">{category}</h3><p className="mt-2 text-sm leading-6 text-[#657168]">{categoryDescriptions[index] || '用于归类热点、判断选题价值，并保留来源、风险和视频表达建议。'}</p></a>)}
+          </div>
+        </div>
+      </section>
+
+      <section className="mx-auto grid w-full max-w-7xl gap-8 px-5 py-14 sm:px-8 lg:grid-cols-[0.85fr_1.15fr]" id="sources">
+        <div><p className="text-sm font-semibold text-[#176f5d]">Workflow</p><h2 className="mt-2 text-2xl font-semibold">每日热点筛选流程</h2><p className="mt-3 leading-7 text-[#657168]">后续可以接入热点抓取、关键词监测、人工审核和选题评分，形成每 10 分钟更新的视频号选题池。</p></div>
+        <div className="grid gap-3 sm:grid-cols-2">
+          {data.workflow.map((item, index) => {
+            const icons = [TrendingUp, ShieldCheck, CheckCircle2, Sparkles];
+            const Icon = icons[index] || Sparkles;
+            return <article className="rounded-lg border border-[#e1e8e2] bg-white p-5" key={item}><Icon className="mb-4 text-[#176f5d]" size={22} aria-hidden="true" /><h3 className="font-semibold">{item}</h3><p className="mt-2 text-sm leading-6 text-[#657168]">保留热度、可信来源、目标受众、视频角度和风险提示，方便后续制作脚本。</p></article>;
+          })}
+        </div>
+      </section>
+
+      <section className="bg-[#18221d] px-5 py-10 text-white sm:px-8" id="search">
+        <div className="mx-auto flex w-full max-w-7xl flex-col gap-4 md:flex-row md:items-center md:justify-between">
+          <div><h2 className="text-2xl font-semibold">准备接入自动更新</h2><p className="mt-2 max-w-2xl text-sm leading-6 text-white/70">{data.disclaimer}</p></div>
+          <button className="inline-flex items-center justify-center gap-2 rounded-md bg-white px-5 py-3 text-sm font-semibold text-[#18221d] transition hover:bg-[#f0f5f1]"><HeartPulse size={16} aria-hidden="true" />设计筛选后台</button>
+        </div>
+      </section>
+    </main>
+  );
+}
+
+export default App;
