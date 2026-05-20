@@ -3,33 +3,25 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>睿宝视频号热点筛选 - 静态预览</title>
+    <title>睿宝视频号热点筛选 - 预览</title>
     <style>
       * { box-sizing: border-box; }
-      html { scroll-behavior: smooth; }
       body { margin: 0; min-width: 320px; font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #fbfbf7; color: #18221d; }
       a { color: inherit; text-decoration: none; }
       button { font: inherit; }
       .wrap { width: min(100% - 40px, 1180px); margin: 0 auto; }
-      .top { position: sticky; top: 0; z-index: 10; border-bottom: 1px solid #e6ebe4; background: rgba(251,251,247,.92); backdrop-filter: blur(16px); }
-      .nav { display: flex; align-items: center; justify-content: space-between; padding: 16px 0; }
-      .brand, .button, .search, .eyebrow { display: inline-flex; align-items: center; gap: 10px; }
-      .brand { font-weight: 700; }
-      .logo { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 6px; background: #176f5d; color: #fff; font-size: 14px; }
-      .links { display: flex; gap: 28px; color: #66736b; font-size: 14px; }
-      .search { justify-content: center; width: 36px; height: 36px; border: 1px solid #d7dfd8; border-radius: 6px; background: #fff; }
-      .hero { padding: 60px 0 44px; }
+      header { position: sticky; top: 0; z-index: 5; border-bottom: 1px solid #e6ebe4; background: rgba(251,251,247,.94); backdrop-filter: blur(16px); }
+      nav { display: flex; align-items: center; justify-content: space-between; padding: 16px 0; }
+      .brand { display: inline-flex; align-items: center; gap: 10px; font-weight: 700; }
+      .logo { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 6px; background: #176f5d; color: #fff; }
+      .hero { padding: 56px 0 36px; }
       .eyebrow { color: #176f5d; font-size: 14px; font-weight: 650; }
-      h1 { max-width: 760px; margin: 20px 0 0; font-size: clamp(40px, 6.4vw, 68px); line-height: 1.06; font-weight: 650; letter-spacing: 0; }
-      .lead { max-width: 690px; color: #5f6c64; font-size: 18px; line-height: 1.8; }
-      .actions { display: flex; gap: 12px; margin-top: 30px; flex-wrap: wrap; }
-      .button { justify-content: center; min-height: 46px; padding: 0 20px; border-radius: 6px; font-weight: 700; font-size: 14px; border: 0; cursor: pointer; }
-      .primary { background: #18221d; color: #fff; }
-      .secondary { border: 1px solid #d7dfd8; background: #fff; color: #18221d; }
-      .workbench { display: grid; grid-template-columns: .9fr 1.1fr; gap: 20px; padding-bottom: 56px; }
+      h1 { max-width: 760px; margin: 14px 0 0; font-size: clamp(38px, 6vw, 64px); line-height: 1.08; font-weight: 650; letter-spacing: 0; }
+      .lead { max-width: 720px; color: #5f6c64; font-size: 17px; line-height: 1.8; }
+      .workbench { display: grid; grid-template-columns: .9fr 1.1fr; gap: 20px; padding: 0 0 56px; }
       .panel { border: 1px solid #e1e8e2; border-radius: 10px; background: rgba(255,255,255,.86); padding: 20px; }
-      .detail { position: sticky; top: 92px; align-self: start; background: #fff; }
-      .panel-head { display: flex; justify-content: space-between; align-items: start; gap: 16px; margin-bottom: 14px; }
+      .detail { position: sticky; top: 88px; align-self: start; background: #fff; }
+      .panel-head { display: flex; justify-content: space-between; gap: 16px; margin-bottom: 14px; }
       .label { color: #8a978e; font-size: 12px; font-weight: 800; letter-spacing: .18em; text-transform: uppercase; }
       h2 { margin: 6px 0 0; font-size: 22px; font-weight: 650; }
       .count, .pill { border-radius: 6px; background: #eef6f1; color: #176f5d; padding: 5px 10px; font-size: 12px; font-weight: 700; }
@@ -44,177 +36,51 @@
       .score { margin: 6px 0 0; color: #8a978e; font-size: 12px; }
       .detail-title { margin: 14px 0 0; font-size: 26px; line-height: 1.38; }
       .detail-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 20px; }
-      .mini { border: 1px solid #edf1ec; border-radius: 9px; background: #fbfdf9; padding: 16px; }
-      .mini p, .summary p, .risk p { margin: 8px 0 0; color: #4f5e55; font-size: 14px; line-height: 1.75; }
-      .source-button { display: inline-flex; align-items: center; gap: 8px; margin-top: 12px; border-radius: 6px; background: #18221d; color: #fff; padding: 10px 13px; font-size: 14px; font-weight: 700; }
+      .box { border: 1px solid #edf1ec; border-radius: 9px; background: #fbfdf9; padding: 16px; }
+      .box p, .summary p, .risk p { margin: 8px 0 0; color: #4f5e55; font-size: 14px; line-height: 1.75; }
+      .source-button { display: inline-flex; margin-top: 12px; border-radius: 6px; background: #18221d; color: #fff; padding: 10px 13px; font-size: 14px; font-weight: 700; }
       .summary { margin-top: 12px; border: 1px solid #edf1ec; border-radius: 9px; padding: 16px; }
       .risk { margin-top: 12px; border: 1px solid #f1dfd0; border-radius: 9px; background: #fff9f4; padding: 16px; }
       .risk .label { color: #a6682d; }
       .risk p { color: #6f4c2d; }
       .disclaimer { margin: 14px 0 0; color: #8a978e; font-size: 12px; line-height: 1.7; }
-      .band { border-top: 1px solid #e6ebe4; border-bottom: 1px solid #e6ebe4; background: #fff; padding: 48px 0; }
-      .section-head { display: flex; justify-content: space-between; align-items: end; margin-bottom: 28px; }
-      .section-head p, .pipeline .kicker { color: #176f5d; font-size: 14px; font-weight: 700; }
-      .section-head h2, .pipeline h2, .footer h2 { margin: 8px 0 0; font-size: 28px; font-weight: 650; }
-      .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; overflow: hidden; border: 1px solid #e6ebe4; border-radius: 10px; background: #e6ebe4; }
-      .card { background: #fff; padding: 22px; }
-      .card:hover { background: #f7faf6; }
-      .mark { color: #176f5d; font-size: 13px; font-weight: 800; }
-      .card h3 { margin: 14px 0 0; font-size: 16px; }
-      .card p, .pipeline p { color: #657168; line-height: 1.7; font-size: 14px; }
-      .pipeline { display: grid; grid-template-columns: .85fr 1.15fr; gap: 36px; padding: 56px 0; }
-      .source-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
-      .source-grid .card { border: 1px solid #e1e8e2; border-radius: 10px; }
-      .footer { background: #18221d; color: #fff; padding: 40px 0; }
-      .footer .wrap { display: flex; align-items: center; justify-content: space-between; gap: 18px; }
-      .footer p { color: rgba(255,255,255,.7); line-height: 1.65; }
-      @media (max-width: 900px) { .links { display: none; } .workbench, .pipeline { grid-template-columns: 1fr; } .detail { position: static; } .grid, .source-grid { grid-template-columns: 1fr; } .footer .wrap { align-items: stretch; flex-direction: column; } }
-      @media (max-width: 560px) { .wrap { width: min(100% - 28px, 1180px); } h1 { font-size: 38px; } .lead { font-size: 16px; } .actions, .detail-grid { flex-direction: column; grid-template-columns: 1fr; } .button { width: 100%; } .meta { align-items: flex-start; flex-direction: column; } }
+      @media (max-width: 900px) { .workbench { grid-template-columns: 1fr; } .detail { position: static; } }
+      @media (max-width: 560px) { .wrap { width: min(100% - 28px, 1180px); } h1 { font-size: 38px; } .detail-grid { grid-template-columns: 1fr; } .meta { align-items: flex-start; flex-direction: column; } }
     </style>
   </head>
   <body>
-    <header class="top">
-      <div class="wrap nav">
-        <a class="brand" href="./"><span class="logo">睿</span><span data-site-title>睿宝视频号热点筛选</span></a>
-        <nav class="links" data-nav></nav>
-        <a class="search" href="#recent" aria-label="搜索内容">搜</a>
-      </div>
-    </header>
+    <header><nav class="wrap"><a class="brand" href="./"><span class="logo">睿</span><span data-site-title>睿宝视频号热点筛选</span></a><a href="./">返回首页</a></nav></header>
     <main>
-      <section class="wrap hero">
-        <p class="eyebrow" data-subtitle></p>
-        <h1 data-title></h1>
-        <p class="lead" data-description></p>
-        <div class="actions">
-          <a class="button primary" href="#recent">查看候选热点</a>
-          <a class="button secondary" href="#sources">筛选流程</a>
-        </div>
-      </section>
-
-      <section class="wrap workbench" id="recent">
-        <aside class="panel">
-          <div class="panel-head">
-            <div>
-              <div class="label">Candidates</div>
-              <h2>候选热点</h2>
-              <p class="sync" data-sync>本地预览</p>
-            </div>
-            <span class="count" data-count>0 条</span>
-          </div>
-          <div class="news" data-hotspots></div>
-        </aside>
-
-        <section class="panel detail" data-detail></section>
-      </section>
-
-      <section class="band" id="topics">
-        <div class="wrap">
-          <div class="section-head"><div><p>Screening</p><h2>筛选维度</h2></div><span class="mark">TOPIC</span></div>
-          <div class="grid" data-categories></div>
-        </div>
-      </section>
-
-      <section class="wrap pipeline" id="sources">
-        <div><p class="kicker">Workflow</p><h2>每日热点筛选流程</h2><p>后续可以接入热点抓取、关键词监测、人工审核和选题评分，形成每 10 分钟更新的视频号选题池。</p></div>
-        <div class="source-grid" data-workflow></div>
-      </section>
-
-      <section class="footer" id="search">
-        <div class="wrap"><div><h2>准备接入自动更新</h2><p data-disclaimer></p></div><a class="button secondary" href="#sources">设计筛选后台</a></div>
-      </section>
+      <section class="wrap hero"><p class="eyebrow" data-subtitle></p><h1 data-title></h1><p class="lead" data-description></p></section>
+      <section class="wrap workbench"><aside class="panel"><div class="panel-head"><div><div class="label">Candidates</div><h2>候选热点</h2><p class="sync" data-sync>加载中</p></div><span class="count" data-count>0 条</span></div><div class="news" data-hotspots></div></aside><section class="panel detail" data-detail></section></section>
     </main>
-
     <script>
-      const fallbackData = {
-        updatedAt: '2026-05-19T03:06:09.329Z',
-        title: '睿宝视频号热点筛选',
-        subtitle: '儿童健康内容热点筛选看板',
-        description: '从儿科、益生菌、儿童保健和儿童健康相关热点中筛出适合视频号表达的选题，兼顾热度、可信度、家长关心程度和内容风险。',
-        categories: ['儿科热点', '益生菌话题', '儿童保健', '儿童健康', '选题追踪', '内容审核'],
-        hotspots: [
-          { tag: '儿科', title: '儿童呼吸道感染进入高关注期，适合做家庭护理和就诊判断选题', time: '2 小时前', sourceName: '示例选题池', sourceUrl: '', summary: '围绕近期儿童呼吸道感染关注度上升，适合整理家庭观察、就医判断和护理误区。', angle: '家长如何判断居家观察还是就医', score: 92, risk: '需避免替代医生诊断' },
-          { tag: '益生菌', title: '儿童益生菌使用场景升温，适合拆成科普边界与常见误区', time: '4 小时前', sourceName: '示例选题池', sourceUrl: '', summary: '适合用短视频解释益生菌适用边界、常见误区，以及哪些情况需要咨询医生。', angle: '益生菌不是万能补充剂', score: 86, risk: '需标注适用边界和咨询医生' },
-          { tag: '保健', title: '睡眠、运动、营养管理搜索热度上升，可做系列短视频', time: '6 小时前', sourceName: '示例选题池', sourceUrl: '', summary: '可拆成一组家庭可执行清单，帮助家长快速建立儿童日常保健认知。', angle: '一周儿童健康习惯清单', score: 82, risk: '避免制造焦虑' },
-          { tag: '疫苗', title: '校园健康通知与感染预防相关内容适合做政策提醒类选题', time: '8 小时前', sourceName: '示例选题池', sourceUrl: '', summary: '适合跟进学校通知、疾控提醒和感染预防信息，做成家长提醒类内容。', angle: '开学季感染预防提醒', score: 80, risk: '需引用权威机构通知' },
-          { tag: '发育', title: '身高体重、视力和口腔管理长期稳定，可沉淀为常青内容', time: '今日早些时候', sourceName: '示例选题池', sourceUrl: '', summary: '适合做长期内容池，按年龄段拆解筛查重点和家庭行动建议。', angle: '不同年龄段的筛查重点', score: 78, risk: '避免单一指标判断发育情况' }
-        ],
-        workflow: ['热点发现与关键词监测', '可信来源与医学依据核验', '视频号选题评分与排序', '脚本草稿与发布复盘'],
-        disclaimer: '健康内容仅用于选题筛选和科普策划，不替代医生诊断或治疗建议。发布前应核验权威来源。'
-      };
-      const categoryDescriptions = ['归类儿科相关热搜，判断视频号选题价值。','整理研究动态、产品监管、适用场景和风险提醒。','覆盖发育、睡眠、营养、运动、口腔和视力等日常主题。','承接综合热点、疾病预防、季节提醒和家庭护理内容。','记录热点来源、热度变化、推荐角度和发布状态。','标注医学依据、风险等级和不适合传播的表达。'];
-      const workflowDescriptions = ['发现儿科、益生菌和儿童健康相关新增话题。', '确认来源和表达边界，降低健康内容风险。', '按热度、可讲性、受众需求和风险排序。', '沉淀标题、脚本角度和发布后的数据反馈。'];
+      const fallbackData = { updatedAt: new Date().toISOString(), title: '睿宝视频号热点筛选', subtitle: '儿童健康内容热点筛选看板', description: '从儿科、益生菌、儿童保健和儿童健康相关热点中筛出适合视频号表达的选题。', hotspots: [], disclaimer: '健康内容仅用于选题筛选和科普策划，不替代医生诊断或治疗建议。发布前应核验权威来源。' };
       let currentData = fallbackData;
       let selectedIndex = 0;
-
-      function escapeHtml(value) {
-        return String(value || '').replace(/[&<>"']/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
+      const escapeHtml = (value) => String(value || '').replace(/[&<>"']/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
+      const formatUpdatedAt = (value) => { const date = new Date(value); return Number.isNaN(date.getTime()) ? '待更新' : date.toLocaleString('zh-CN', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }); };
+      function renderDetail(item) {
+        if (!item) { document.querySelector('[data-detail]').innerHTML = '<h2>暂无热点</h2><p class="disclaimer">等待自动更新后展示。</p>'; return; }
+        const source = item.sourceUrl ? '<a class="source-button" href="' + escapeHtml(item.sourceUrl) + '" target="_blank" rel="noreferrer">打开新闻原文 ↗</a>' : '<p>暂无原文链接，建议人工补充来源后再使用。</p>';
+        document.querySelector('[data-detail]').innerHTML = '<div><span class="pill">' + escapeHtml(item.tag) + '</span><span class="sync">　' + escapeHtml(item.time) + (item.score ? ' · 选题分 ' + escapeHtml(item.score) : '') + '</span></div><h2 class="detail-title">' + escapeHtml(item.title) + '</h2><div class="detail-grid"><div class="box"><div class="label">来源核验</div><p><strong>' + escapeHtml(item.sourceName || '暂无来源名称') + '</strong></p>' + source + '</div><div class="box"><div class="label">视频号角度</div><p>' + escapeHtml(item.angle || '暂无推荐角度，可先从家长最关心的问题切入。') + '</p></div></div><div class="summary"><div class="label">原文摘要</div><p>' + escapeHtml(item.summary || '暂无摘要，建议打开来源核验。') + '</p></div><div class="risk"><div class="label">风险提示</div><p>' + escapeHtml(item.risk || '发布前需要核验权威来源，避免把科普内容表达成诊疗建议。') + '</p></div><p class="disclaimer">' + escapeHtml(currentData.disclaimer) + '</p>';
       }
-
-      function formatUpdatedAt(value) {
-        const date = new Date(value);
-        if (Number.isNaN(date.getTime())) return '待更新';
-        return date.toLocaleString('zh-CN', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' });
-      }
-
-      function renderDetail(hotspot) {
-        const sourceHtml = hotspot.sourceUrl
-          ? '<a class="source-button" href="' + escapeHtml(hotspot.sourceUrl) + '" target="_blank" rel="noreferrer">打开新闻原文 ↗</a>'
-          : '<p>暂无原文链接，建议人工补充来源后再使用。</p>';
-
-        document.querySelector('[data-detail]').innerHTML =
-          '<div><span class="pill">' + escapeHtml(hotspot.tag) + '</span><span class="sync">　' + escapeHtml(hotspot.time) + (hotspot.score ? ' · 选题分 ' + escapeHtml(hotspot.score) : '') + '</span></div>' +
-          '<h2 class="detail-title">' + escapeHtml(hotspot.title) + '</h2>' +
-          '<div class="detail-grid">' +
-            '<div class="mini"><div class="label">来源核验</div><p><strong>' + escapeHtml(hotspot.sourceName || '暂无来源名称') + '</strong></p>' + sourceHtml + '</div>' +
-            '<div class="mini"><div class="label">视频号角度</div><p>' + escapeHtml(hotspot.angle || '暂无推荐角度，可先从家长最关心的问题切入。') + '</p></div>' +
-          '</div>' +
-          '<div class="summary"><div class="label">原文摘要</div><p>' + escapeHtml(hotspot.summary || '暂无摘要，建议打开来源核验。') + '</p></div>' +
-          '<div class="risk"><div class="label">风险提示</div><p>' + escapeHtml(hotspot.risk || '发布前需要核验权威来源，避免把科普内容表达成诊疗建议。') + '</p></div>' +
-          '<p class="disclaimer">' + escapeHtml(currentData.disclaimer) + '</p>';
-      }
-
       function render(data, live) {
         currentData = data;
-        const categories = data.categories && data.categories.length ? data.categories : fallbackData.categories;
-        const hotspots = (data.hotspots || fallbackData.hotspots).slice(0, 12);
+        const hotspots = (data.hotspots || []).slice(0, 12);
         if (selectedIndex >= hotspots.length) selectedIndex = 0;
-
-        document.title = data.title + ' - 静态预览';
+        document.title = data.title + ' - 预览';
         document.querySelector('[data-site-title]').textContent = data.title;
         document.querySelector('[data-title]').textContent = data.title;
         document.querySelector('[data-subtitle]').textContent = data.subtitle;
         document.querySelector('[data-description]').textContent = data.description;
-        document.querySelector('[data-disclaimer]').textContent = data.disclaimer;
         document.querySelector('[data-sync]').textContent = (live ? '已同步' : '本地预览') + ' · ' + formatUpdatedAt(data.updatedAt);
         document.querySelector('[data-count]').textContent = hotspots.length + ' 条';
-        document.querySelector('[data-nav]').innerHTML = categories.slice(0, 4).map((item) => '<a href="#topics">' + escapeHtml(item) + '</a>').join('');
-        document.querySelector('[data-hotspots]').innerHTML = hotspots.map((item, index) =>
-          '<button class="item ' + (index === selectedIndex ? 'active' : '') + '" type="button" data-hotspot-index="' + index + '">' +
-            '<div class="meta"><strong>0' + (index + 1) + ' · ' + escapeHtml(item.tag) + '</strong><span>' + escapeHtml(item.time) + '</span></div>' +
-            '<h3>' + escapeHtml(item.title) + '</h3>' +
-            (item.score ? '<p class="score">选题分：' + escapeHtml(item.score) + '</p>' : '') +
-          '</button>'
-        ).join('');
-        document.querySelector('[data-categories]').innerHTML = categories.map((item, index) => '<article class="card"><span class="mark">0' + (index + 1) + '</span><h3>' + escapeHtml(item) + '</h3><p>' + escapeHtml(categoryDescriptions[index] || '用于归类热点、判断选题价值，并保留来源、风险和视频表达建议。') + '</p></article>').join('');
-        document.querySelector('[data-workflow]').innerHTML = (data.workflow || []).map((item, index) => '<article class="card"><span class="mark">' + String.fromCharCode(65 + index) + '</span><h3>' + escapeHtml(item) + '</h3><p>' + escapeHtml(workflowDescriptions[index] || '保留热度、可信来源、目标受众、视频角度和风险提示。') + '</p></article>').join('');
-        renderDetail(hotspots[selectedIndex] || fallbackData.hotspots[0]);
+        document.querySelector('[data-hotspots]').innerHTML = hotspots.map((item, index) => '<button class="item ' + (index === selectedIndex ? 'active' : '') + '" type="button" data-hotspot-index="' + index + '"><div class="meta"><strong>0' + (index + 1) + ' · ' + escapeHtml(item.tag) + '</strong><span>' + escapeHtml(item.time) + '</span></div><h3>' + escapeHtml(item.title) + '</h3>' + (item.score ? '<p class="score">选题分：' + escapeHtml(item.score) + '</p>' : '') + '</button>').join('');
+        renderDetail(hotspots[selectedIndex]);
       }
-
-      document.addEventListener('click', (event) => {
-        const button = event.target.closest('[data-hotspot-index]');
-        if (!button) return;
-        selectedIndex = Number(button.dataset.hotspotIndex || 0);
-        render(currentData, true);
-      });
-
-      render(fallbackData, false);
-      fetch('public/hotspots.json', { cache: 'no-store' })
-        .then((response) => response.ok ? response.json() : Promise.reject())
-        .then((data) => { selectedIndex = 0; render(data, true); })
-        .catch(() => fetch('/hotspots.json', { cache: 'no-store' })
-          .then((response) => response.ok ? response.json() : Promise.reject())
-          .then((data) => { selectedIndex = 0; render(data, true); })
-          .catch(() => render(fallbackData, false)));
+      document.addEventListener('click', (event) => { const button = event.target.closest('[data-hotspot-index]'); if (!button) return; selectedIndex = Number(button.dataset.hotspotIndex || 0); render(currentData, true); });
+      fetch('./hotspots.json', { cache: 'no-store' }).then((response) => response.ok ? response.json() : Promise.reject()).then((data) => render(data, true)).catch(() => render(fallbackData, false));
     </script>
   </body>
 </html>
