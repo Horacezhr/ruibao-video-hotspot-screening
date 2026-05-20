@@ -94,6 +94,41 @@ function sourceUrls(source) {
   return [];
 }
 
+function resolveUrl(baseUrl, href = '') {
+  const decoded = decodeEntities(href.trim());
+  if (!decoded || decoded.startsWith('#') || decoded.startsWith('javascript:')) return '';
+  try {
+    return new URL(decoded, baseUrl).href;
+  } catch {
+    return '';
+  }
+}
+
+function parseWebsite(html, source) {
+  const keywords = config.keywords || [];
+  const anchorPattern = /<a\b[^>]*href=["']([^"']+)["'][^>]*>([\s\S]*?)<\/a>/gi;
+
+  return [...html.matchAll(anchorPattern)]
+    .map((match) => {
+      const sourceUrl = resolveUrl(source.officialUrl, match[1]);
+      const title = stripTags(match[2]);
+      return {
+        tag: source.tag,
+        title,
+        time: '官网最新',
+        sourceName: source.name,
+        sourceUrl,
+        summary: title ? `来自${source.name}官网栏目，发布前建议打开原文核验。` : '',
+        angle: makeAngle(title, source.tag),
+        score: scoreTitle(title, source.tag),
+        risk: makeRisk(source.tag),
+      };
+    })
+    .filter((item) => item.title.length >= 6 && item.sourceUrl)
+    .filter((item) => keywords.some((keyword) => item.title.includes(keyword)) || ['妇幼', '儿科'].includes(source.tag))
+    .slice(0, 8);
+}
+
 async function fetchText(url) {
   const response = await fetch(url, {
     headers: {
@@ -132,6 +167,13 @@ function parseFeed(xml, source) {
 }
 
 async function fetchSource(source) {
+  if (source.type === 'website' && !source.rssUrl && source.officialUrl) {
+    const html = await fetchText(source.officialUrl);
+    const items = parseWebsite(html, source);
+    if (items.length) return items;
+    throw new Error(source.name + ': 官网未解析到可用链接');
+  }
+
   const urls = sourceUrls(source);
   if (!urls.length) {
     throw new Error(source.name + ': 未配置可抓取 RSS 地址或公众号 accountId');
