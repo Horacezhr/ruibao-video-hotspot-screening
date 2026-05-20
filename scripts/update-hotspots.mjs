@@ -10,6 +10,7 @@ const config = JSON.parse(await fs.readFile(sourcePath, 'utf8'));
 const fallback = JSON.parse(await fs.readFile(outputPath, 'utf8'));
 
 const rsshubInstances = config.rsshubInstances?.length ? config.rsshubInstances : ['https://rsshub.app'];
+const requestTimeoutMs = config.requestTimeoutMs || 12000;
 
 function decodeEntities(value = '') {
   return value
@@ -130,12 +131,24 @@ function parseWebsite(html, source) {
 }
 
 async function fetchText(url) {
-  const response = await fetch(url, {
-    headers: {
-      'user-agent': 'ruibao-video-hotspot-screening/1.0 (+https://github.com/Horacezhr/ruibao-video-hotspot-screening)',
-      accept: 'application/rss+xml, application/xml, text/xml, */*',
-    },
-  });
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), requestTimeoutMs);
+
+  let response;
+  try {
+    response = await fetch(url, {
+      signal: controller.signal,
+      headers: {
+        'user-agent': 'ruibao-video-hotspot-screening/1.0 (+https://github.com/Horacezhr/ruibao-video-hotspot-screening)',
+        accept: 'application/rss+xml, application/xml, text/xml, */*',
+      },
+    });
+  } catch (error) {
+    if (error.name === 'AbortError') throw new Error('请求超时');
+    throw error;
+  } finally {
+    clearTimeout(timeout);
+  }
 
   if (!response.ok) throw new Error('HTTP ' + response.status);
   return response.text();
@@ -194,18 +207,23 @@ async function fetchSource(source) {
   throw new Error(source.name + ': ' + errors.join('；'));
 }
 
+const sources = config.sources || config.feeds || [];
+const results = await Promise.allSettled(sources.map((source) => fetchSource(source)));
 const collected = [];
 const failures = [];
 const pendingSources = [];
 
-for (const source of config.sources || config.feeds || []) {
-  try {
-    collected.push(...(await fetchSource(source)));
-  } catch (error) {
-    failures.push(error.message);
-    if (error.message.includes('未配置')) pendingSources.push(source.name);
+results.forEach((result, index) => {
+  const source = sources[index];
+  if (result.status === 'fulfilled') {
+    collected.push(...result.value);
+    return;
   }
-}
+
+  const message = result.reason?.message || String(result.reason);
+  failures.push(message);
+  if (message.includes('未配置')) pendingSources.push(source.name);
+});
 
 const seen = new Set();
 const hotspots = collected
@@ -228,7 +246,7 @@ const output = {
     failures,
     pendingSources,
     fetchedCount: collected.length,
-    sourceCount: (config.sources || config.feeds || []).length,
+    sourceCount: sources.length,
   },
 };
 
