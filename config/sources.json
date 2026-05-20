@@ -3,6 +3,7 @@
     "https://rsshub.app",
     "https://rsshub.rssforever.com"
   ],
+  "requestTimeoutMs": 5000,
   "keywords": [
     "儿科",
     "儿童",
@@ -54,42 +55,91 @@
       "name": "飞鹤星妈会",
       "tag": "营养",
       "type": "wechat-rsshub-sogou",
-      "accountId": "",
+      "accountId": "Firmusmomclub",
       "officialUrl": "https://www.feihe.com/"
     },
     {
       "name": "口袋育儿",
       "tag": "育儿",
       "type": "wechat-rsshub-sogou",
-      "accountId": "",
+      "accountId": "koudaiyuer",
       "officialUrl": ""
     },
     {
       "name": "大伦育儿说",
       "tag": "育儿",
       "type": "wechat-rsshub-sogou",
-      "accountId": "",
+      "accountId": "dalun_yes",
       "officialUrl": ""
     },
     {
       "name": "宝宝辅食达人",
       "tag": "辅食",
       "type": "wechat-rsshub-sogou",
-      "accountId": "",
+      "accountId": "baobaoshipu521",
       "officialUrl": ""
     },
     {
       "name": "辣妈联盟",
       "tag": "育儿",
       "type": "wechat-rsshub-sogou",
-      "accountId": "",
+      "accountId": "lamalianmeng_",
       "officialUrl": ""
     },
     {
       "name": "菌菌有约",
       "tag": "益生菌",
       "type": "wechat-rsshub-sogou",
-      "accountId": "",
+      "accountId": "gh_147d3c4c93b3",
+      "officialUrl": ""
+    },
+    {
+      "name": "丁香医生",
+      "tag": "健康",
+      "type": "wechat-rsshub-sogou",
+      "accountId": "DingXiangYiSheng",
+      "officialUrl": "https://dxy.com/"
+    },
+    {
+      "name": "深圳市儿童医院",
+      "tag": "儿科",
+      "type": "wechat-rsshub-sogou",
+      "accountId": "szsetyy001",
+      "officialUrl": "https://www.szkid.com.cn/"
+    },
+    {
+      "name": "上海儿童医学中心",
+      "tag": "儿科",
+      "type": "wechat-rsshub-sogou",
+      "accountId": "SCMC_Shanghai",
+      "officialUrl": "https://www.scmc.com.cn/"
+    },
+    {
+      "name": "童爸育儿",
+      "tag": "育儿",
+      "type": "wechat-rsshub-sogou",
+      "accountId": "tongbayuer",
+      "officialUrl": ""
+    },
+    {
+      "name": "儿科严医生",
+      "tag": "儿科",
+      "type": "wechat-rsshub-sogou",
+      "accountId": "DSYANHU",
+      "officialUrl": ""
+    },
+    {
+      "name": "沪眼",
+      "tag": "视力",
+      "type": "wechat-rsshub-sogou",
+      "accountId": "Hu-Eye",
+      "officialUrl": ""
+    },
+    {
+      "name": "萌芽小组",
+      "tag": "育儿",
+      "type": "wechat-rsshub-sogou",
+      "accountId": "mengyaji",
       "officialUrl": ""
     }
   ]
