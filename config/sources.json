@@ -1,7 +1,6 @@
 {
   "rsshubInstances": [
-    "https://rsshub.app",
-    "https://rsshub.rssforever.com"
+    "http://horace.i234.me:1200"
   ],
   "requestTimeoutMs": 5000,
   "keywords": [
