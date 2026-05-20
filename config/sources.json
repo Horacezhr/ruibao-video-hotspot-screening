@@ -1,34 +1,96 @@
 {
+  "rsshubInstances": [
+    "https://rsshub.app",
+    "https://rsshub.rssforever.com"
+  ],
   "keywords": [
     "儿科",
+    "儿童",
+    "宝宝",
+    "婴幼儿",
+    "妇幼",
     "儿童健康",
     "儿童保健",
-    "儿童益生菌",
-    "儿童呼吸道感染",
-    "儿童营养",
-    "儿童发育",
-    "儿童疫苗"
+    "益生菌",
+    "呼吸道感染",
+    "营养",
+    "发育",
+    "疫苗",
+    "辅食",
+    "过敏",
+    "身高",
+    "视力"
   ],
-  "feeds": [
+  "sources": [
     {
-      "name": "Bing News - 儿科",
+      "name": "国家卫生健康委妇幼健康中心",
+      "tag": "妇幼",
+      "type": "website",
+      "officialUrl": "https://www.chinawch.org.cn/",
+      "rssUrl": ""
+    },
+    {
+      "name": "首都儿科研究所",
       "tag": "儿科",
-      "url": "https://www.bing.com/news/search?q=%E5%84%BF%E7%A7%91%20%E5%84%BF%E7%AB%A5%E5%81%A5%E5%BA%B7&format=rss"
+      "type": "website",
+      "officialUrl": "https://www.shouer.com.cn/",
+      "rssUrl": ""
     },
     {
-      "name": "Bing News - 益生菌",
+      "name": "北京儿童医院",
+      "tag": "儿科",
+      "type": "website",
+      "officialUrl": "https://www.bch.com.cn/",
+      "rssUrl": ""
+    },
+    {
+      "name": "丁香妈妈",
+      "tag": "育儿",
+      "type": "wechat-rsshub-sogou",
+      "accountId": "DingXiangMaMi",
+      "officialUrl": "https://dxy.com/"
+    },
+    {
+      "name": "飞鹤星妈会",
+      "tag": "营养",
+      "type": "wechat-rsshub-sogou",
+      "accountId": "",
+      "officialUrl": "https://www.feihe.com/"
+    },
+    {
+      "name": "口袋育儿",
+      "tag": "育儿",
+      "type": "wechat-rsshub-sogou",
+      "accountId": "",
+      "officialUrl": ""
+    },
+    {
+      "name": "大伦育儿说",
+      "tag": "育儿",
+      "type": "wechat-rsshub-sogou",
+      "accountId": "",
+      "officialUrl": ""
+    },
+    {
+      "name": "宝宝辅食达人",
+      "tag": "辅食",
+      "type": "wechat-rsshub-sogou",
+      "accountId": "",
+      "officialUrl": ""
+    },
+    {
+      "name": "辣妈联盟",
+      "tag": "育儿",
+      "type": "wechat-rsshub-sogou",
+      "accountId": "",
+      "officialUrl": ""
+    },
+    {
+      "name": "菌菌有约",
       "tag": "益生菌",
-      "url": "https://www.bing.com/news/search?q=%E5%84%BF%E7%AB%A5%20%E7%9B%8A%E7%94%9F%E8%8F%8C&format=rss"
-    },
-    {
-      "name": "Bing News - 儿童保健",
-      "tag": "保健",
-      "url": "https://www.bing.com/news/search?q=%E5%84%BF%E7%AB%A5%E4%BF%9D%E5%81%A5%20%E5%84%BF%E7%AB%A5%E5%81%A5%E5%BA%B7&format=rss"
-    },
-    {
-      "name": "Bing News - 儿童发育",
-      "tag": "发育",
-      "url": "https://www.bing.com/news/search?q=%E5%84%BF%E7%AB%A5%E5%8F%91%E8%82%B2%20%E8%90%A5%E5%85%BB%20%E8%A7%86%E5%8A%9B&format=rss"
+      "type": "wechat-rsshub-sogou",
+      "accountId": "",
+      "officialUrl": ""
     }
   ]
 }
